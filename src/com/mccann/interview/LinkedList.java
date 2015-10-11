@@ -4,9 +4,9 @@ package com.mccann.interview;
  * Created by Gerard on 10/9/2015.
  */
 public class LinkedList <T> {
-    Node<T> head;
-    Node<T> tail;
-    int size;
+    private Element<T> head;
+    private Element<T> tail;
+    private int size;
 
 
     LinkedList() {
@@ -15,55 +15,91 @@ public class LinkedList <T> {
         size = 0;
     }
 
-
-    public void add(T element) {
-        Node<T> newItem = new Node<>(element);
+    public void add(T data, int position) {
+        if((position > size) || position < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        Element<T> newElement = new Element<>(data);
+        Element<T> currentElement;
+        Element<T> previousElement;
         if(head == null) {
-            head = newItem;
-            tail = newItem;
+            head = newElement;
+            tail = newElement;
         } else {
-            newItem.setLast(tail);
-            tail.setNext(newItem);
-            tail = newItem;
+            currentElement = find(position);
+            previousElement = currentElement.getPrevious();
+            previousElement.setNext(newElement);
+            newElement.setNext(currentElement);
+            currentElement.setPrevious(newElement);
         }
         size++;
     }
 
-
-    public void add(T element, int position) {
-        if(position > size) {
-            add(element);
-        } else {
-            Node<T> newItem = new Node<>(element);
-            Node<T> currentItem = get(position);
-            Node<T> lastItem = currentItem.getLast();
-            newItem.setNext(currentItem);
-            currentItem.setLast(newItem);
-            lastItem.setNext(newItem);
-            size++;
-        }
+    public void add(T data) {
+        add(data, 0);
     }
 
 
+
+
+    public T get(int position) {
+        return find(position).getData();
+    }
+
     public void remove(int position) {
-        Node<T> item = get(position);
-        Node<T> lastItem;
-        Node<T> nextItem;
-        lastItem = item.getLast();
-        nextItem = item.getNext();
-        lastItem.setNext(nextItem);
-        nextItem.setLast(lastItem);
+        removeLink(find(position));
+    }
+
+    public void remove(T removeItem) {
+        Element<T> currentItem = head;
+        while(!currentItem.getData().equals(removeItem)) {
+            currentItem = currentItem.getNext();
+        }
+
+        removeLink(currentItem);
+    }
+
+    public boolean contains(T item) {
+        Element<T> currentElement = head;
+        while(currentElement != null) {
+            if(currentElement.getData().equals(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    private void removeLink(Element<T> item) {
+        if((item.getPrevious() == null) && (item.getNext() == null)) {
+            head = null;
+            tail = null;
+        } else if(item.getPrevious() == null) {
+            head = item.getNext();
+        } else if(item.getNext() == null) {
+            tail = item.getPrevious();
+        } else {
+            Element<T> lastItem = item.getPrevious();
+            Element<T> nextItem = item.getNext();
+            lastItem.setNext(nextItem);
+            nextItem.setPrevious(lastItem);
+        }
         size--;
     }
 
-
-    //TODO add remove with element type
-
-    public Node<T> get(int position) {
-        if(position > size) {
-            return null;
+    private Element<T> find(int position) {
+        if((position > size) || (position < 0)) {
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append("The position: ");
+            errorMessage.append(position);
+            errorMessage.append(" is outside the list bounds: 0-");
+            errorMessage.append(size);
+            throw new IndexOutOfBoundsException(errorMessage.toString());
         }
-        Node<T> item = head;
+        Element<T> item = head;
         while(position > 0) {
             item = item.getNext();
             position--;
