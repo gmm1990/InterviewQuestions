@@ -39,9 +39,6 @@ public class LinkedList <T> {
         add(data, 0);
     }
 
-
-
-
     public T get(int position) {
         return find(position).getData();
     }
@@ -92,12 +89,8 @@ public class LinkedList <T> {
 
     private Element<T> find(int position) {
         if((position > size) || (position < 0)) {
-            StringBuilder errorMessage = new StringBuilder();
-            errorMessage.append("The position: ");
-            errorMessage.append(position);
-            errorMessage.append(" is outside the list bounds: 0-");
-            errorMessage.append(size);
-            throw new IndexOutOfBoundsException(errorMessage.toString());
+            String errorMessage = "The position" + position + " is outside the list bounds: 0-" + size;
+            throw new IndexOutOfBoundsException(errorMessage);
         }
         Element<T> item = head;
         while(position > 0) {
