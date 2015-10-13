@@ -25,18 +25,29 @@ public class LinkedList <T> {
         if(head == null) {
             head = newElement;
             tail = newElement;
+        } else if(position == 0) {
+            currentElement = head;
+            currentElement.setPrevious(newElement);
+            newElement.setNext(currentElement);
+            head = newElement;
+        } else if(position == size) {
+            currentElement = tail;
+            currentElement.setNext(newElement);
+            newElement.setPrevious(currentElement);
+            tail = newElement;
         } else {
             currentElement = find(position);
             previousElement = currentElement.getPrevious();
             previousElement.setNext(newElement);
             newElement.setNext(currentElement);
+            newElement.setPrevious(previousElement);
             currentElement.setPrevious(newElement);
         }
         size++;
     }
 
     public void add(T data) {
-        add(data, 0);
+        add(data, size);
     }
 
     public T get(int position) {
@@ -62,6 +73,7 @@ public class LinkedList <T> {
             if(currentElement.getData().equals(item)) {
                 return true;
             }
+            currentElement = currentElement.getNext();
         }
         return false;
     }
