@@ -82,6 +82,25 @@ public class LinkedList <T> {
         return size;
     }
 
+    public void reverse() {
+        if(head == null) {
+            return;
+        }
+        Element<T> current = head;
+        Element<T> oldNext = head.getNext();
+        while(oldNext != null) {
+            current.setNext(current.getPrevious());
+            current.setPrevious(oldNext);
+            current = oldNext;
+            oldNext = oldNext.getNext();
+        }
+        current.setNext(current.getPrevious());
+        current.setPrevious(null);
+
+        tail = head;
+        head = current;
+    }
+
     private void removeLink(Element<T> item) {
         if((item.getPrevious() == null) && (item.getNext() == null)) {
             head = null;

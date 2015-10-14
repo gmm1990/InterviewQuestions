@@ -96,8 +96,10 @@ public class LinkedListTest {
         for(int i = 1; i <= TEST_LIST_SIZE; i++) {
             list.add(i);
         }
-        list.remove(new Integer(3));
-        list.remove(new Integer(7));
+        Integer itemToRemove = 3;
+        list.remove(itemToRemove);
+        itemToRemove = 7;
+        list.remove(itemToRemove);
         Integer[] correctList = {1, 2, 4, 5, 6, 8 ,9, 10};
         Integer[] testList = new Integer[TEST_LIST_SIZE - 2];
         for(int i = 0; i < TEST_LIST_SIZE - 2; i++) {
@@ -113,7 +115,7 @@ public class LinkedListTest {
             list.add(i);
         }
 
-        assertFalse(list.contains(new Integer(12)));
+        assertFalse(list.contains(12));
     }
 
     @Test
@@ -123,7 +125,7 @@ public class LinkedListTest {
             list.add(i);
         }
 
-        assertTrue(list.contains(new Integer(3)));
+        assertTrue(list.contains(3));
     }
 
     @Test
@@ -145,6 +147,37 @@ public class LinkedListTest {
 
         list.remove(1);
         assertEquals(TEST_LIST_SIZE - 1, list.getSize());
+    }
+
+    @Test
+    public void testReverse() throws Exception {
+        LinkedList<Integer> list = new LinkedList<>();
+        for(int i = 1; i <= TEST_LIST_SIZE; i++) {
+            list.add(i);
+        }
+
+        list.reverse();
+        //ensure list operations work correctly after reverse
+        list.add(100);
+        list.add(-100, 0);
+
+        Integer[] correctList = {-100, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 100};
+        Integer[] testList = new Integer[TEST_LIST_SIZE + 2];
+        for(int i = 0; i < TEST_LIST_SIZE + 2; i++) {
+            testList[i] = list.get(i);
+        }
+        assertArrayEquals(correctList, testList);
+    }
+
+    @Test
+    public void testReverseEmpty() throws Exception {
+        LinkedList<Integer> list = new LinkedList<>();
+        list.reverse();
+
+        Integer addedItem = 1;
+        list.add(addedItem);
+        Integer retrievedItem = list.get(0);
+        assertEquals(addedItem, retrievedItem);
     }
 
 
